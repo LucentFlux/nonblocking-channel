@@ -1,0 +1,51 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  check_native:
+    name: Cargo check native
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - run: cargo check --all-targets
+
+  test_native:
+    name: Cargo test native
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      - run: cargo test
+
+  check_web:
+    name: Cargo check web
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          target: wasm32-unknown-unknown
+          components: rust-src
+      - run: RUSTFLAGS="--cfg=web_sys_unstable_apis" cargo +nightly check -Z build-std=panic_abort,std --target wasm32-unknown-unknown --all-targets
+
+  test_web:
+    name: Cargo test web
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install wasm-pack
+        uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: wasm-pack -y
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+      - run: wasm-pack test --node

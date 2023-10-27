@@ -1,0 +1,17 @@
+[package]
+name = "nonblocking-channel"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "A SPSC channel designed for the web to never block, even for a cycle."
+homepage = "https://github.com/LucentFlux/nonblocking-channel"
+repository = "https://github.com/LucentFlux/nonblocking-channel"
+readme = "README.md"
+keywords = ["web"]
+include = ["/Cargo.toml", "/LICENSE", "/README.md", "/src/**"]
+
+[dependencies]
+ringbuf = "0.3"
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3.0"
